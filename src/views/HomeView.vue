@@ -4,7 +4,6 @@ import MainPrev from "../components/MainPrev.vue";
 
 <template>
   <main>
-    <select></select>
     <MainPrev />
   </main>
 </template>
