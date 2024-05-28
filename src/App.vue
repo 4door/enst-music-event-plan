@@ -12,7 +12,10 @@ import { RouterLink, RouterView } from "vue-router";
     </div>
   </header>
 
+  <main>
+  <p>enst!!mイベント計画アプリ</p>
   <RouterView />
+  </main>
 </template>
 
 <style scoped>
@@ -56,10 +59,6 @@ nav a:first-of-type {
     display: flex;
     place-items: center;
     padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
   }
 
   header .wrapper {
