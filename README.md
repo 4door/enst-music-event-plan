@@ -1,6 +1,6 @@
 # enstm-skills-checker
 
-あんさんぶるスターズMusicのスキル最適化算出アプリ（※作成中）
+あんさんぶるスターズMusicのイベント走る計画を立てるためのアプリ
 
 ## Project Setup
 
