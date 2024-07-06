@@ -79,6 +79,11 @@
         <label>FEVER: <input type="number" v-model="fever" @change="saveData"></label>
       </div>
 
+      <div class="form-group">
+        <label>1公演あたりの時間（分）<input type="number" v-model="time" @change="saveData"></label>
+        ※空欄の場合12分で計算します
+      </div>
+
       <button @click="calculate">計算を実行</button>
     </div>
     <h2>計算結果</h2>
@@ -116,6 +121,7 @@ export default {
       bp123: 3,
       bp4: 10,
       fever: 0,
+      time: 12,
       result: null
     };
   },mounted() {
@@ -136,7 +142,8 @@ export default {
         score4: this.score4,
         bp123: this.bp123,
         bp4: this.bp4,
-        fever: this.fever
+        fever: this.fever,
+        time: this.time
       };
       localStorage.setItem('enstM_data', JSON.stringify(data));
     },
@@ -156,6 +163,7 @@ export default {
         this.bp123 = data.bp123;
         this.bp4 = data.bp4;
         this.fever = data.fever;
+        this.time = data.time;
       }
     },
     calculate() {
@@ -195,7 +203,10 @@ export default {
       let requiredDiamonds = requiredBP * 2;
 
       // 必要プレイ時間数（分）
-      let requiredTimeMinutes = requiredPlays * 12;
+      if(this.time == null){
+        this.time = 12;
+      }
+      let requiredTimeMinutes = requiredPlays * this.time;
 
       // 現在の獲得ポイント数を考慮し、残りの必要時間等を求める
       // 残りpt
@@ -211,7 +222,7 @@ export default {
       let restRequiredDiamonds = restRequiredBP * 2;
 
       // 残り必要プレイ時間数（分）
-      let restRequiredTimeMinutes = restPlays * 12;
+      let restRequiredTimeMinutes = restPlays * this.time;
 
       // 結果を保存
       this.result = {
