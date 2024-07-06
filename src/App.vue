@@ -13,7 +13,6 @@ import { RouterLink, RouterView } from "vue-router";
   </header>
 
   <main>
-  <p>enst!!mイベント計画アプリ</p>
   <RouterView />
   </main>
 </template>
