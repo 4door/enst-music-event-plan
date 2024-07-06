@@ -203,7 +203,7 @@ export default {
       let requiredDiamonds = requiredBP * 2;
 
       // 必要プレイ時間数（分）
-      if(this.time == null){
+      if(this.time == null || this.time == 0){
         this.time = 12;
       }
       let requiredTimeMinutes = requiredPlays * this.time;
