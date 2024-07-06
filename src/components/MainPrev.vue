@@ -5,7 +5,7 @@
       <h2>enstMツアー計算ツール</h2>
       <div class="form-group">
         <label>特効①の☆3 枚数: 
-          <select v-model="special1_star3">
+          <select v-model="special1_star3" @change="saveData">
             <option v-for="n in 6" :key="n" :value="n-1">{{ n-1 }}</option>
           </select>
         </label>
@@ -13,7 +13,7 @@
 
       <div class="form-group">
         <label>特効①の☆4 枚数: 
-          <select v-model="special1_star4">
+          <select v-model="special1_star4" @change="saveData">
             <option v-for="n in 6" :key="n" :value="n-1">{{ n-1 }}</option>
           </select>
         </label>
@@ -21,7 +21,7 @@
 
       <div class="form-group">
         <label>特効①の☆5 枚数: 
-          <select v-model="special1_star5">
+          <select v-model="special1_star5" @change="saveData">
             <option v-for="n in 6" :key="n" :value="n-1">{{ n-1 }}</option>
           </select>
         </label>
@@ -29,7 +29,7 @@
 
       <div class="form-group">
         <label>特効②の☆3 枚数: 
-          <select v-model="special2_star3">
+          <select v-model="special2_star3" @change="saveData">
             <option v-for="n in 6" :key="n" :value="n-1">{{ n-1 }}</option>
           </select>
         </label>
@@ -37,7 +37,7 @@
 
       <div class="form-group">
         <label>特効②の☆4 枚数: 
-          <select v-model="special2_star4">
+          <select v-model="special2_star4" @change="saveData">
             <option v-for="n in 6" :key="n" :value="n-1">{{ n-1 }}</option>
           </select>
         </label>
@@ -45,38 +45,38 @@
 
       <div class="form-group">
         <label>特効②の☆5 枚数: 
-          <select v-model="special2_star5">
+          <select v-model="special2_star5" @change="saveData">
             <option v-for="n in 6" :key="n" :value="n-1">{{ n-1 }}</option>
           </select>
         </label>
       </div>
 
       <div class="form-group">
-        <label>現在のpt数(万pt): <input type="number" v-model="currentPoints"></label>
+        <label>現在のpt数(万pt): <input type="number" v-model="currentPoints" @change="saveData"></label>
       </div>
 
       <div class="form-group">
-        <label>目標pt(万pt): <input type="number" v-model="targetPoints"></label>
+        <label>目標pt(万pt): <input type="number" v-model="targetPoints" @change="saveData"></label>
       </div>
 
       <div class="form-group">
-        <label>１～３曲目ライブSCORE(万pt): <input type="number" v-model="score123"></label>
+        <label>１～３曲目ライブSCORE(万pt): <input type="number" v-model="score123" @change="saveData"></label>
       </div>
 
       <div class="form-group">
-        <label>４曲目ライブSCORE(万pt): <input type="number" v-model="score4"></label>
+        <label>４曲目ライブSCORE(万pt): <input type="number" v-model="score4" @change="saveData"></label>
       </div>
 
       <div class="form-group">
-        <label>１～３曲目ライブBP: <input type="number" v-model="bp123"></label>
+        <label>１～３曲目ライブBP: <input type="number" v-model="bp123" @change="saveData"></label>
       </div>
 
       <div class="form-group">
-        <label>４曲目ライブBP: <input type="number" v-model="bp4"></label>
+        <label>４曲目ライブBP: <input type="number" v-model="bp4" @change="saveData"></label>
       </div>
 
       <div class="form-group">
-        <label>FEVER: <input type="number" v-model="fever"></label>
+        <label>FEVER: <input type="number" v-model="fever" @change="saveData"></label>
       </div>
 
       <button @click="calculate">計算を実行</button>
@@ -118,8 +118,46 @@ export default {
       fever: 0,
       result: null
     };
+  },mounted() {
+    this.loadData();
   },
   methods: {
+    saveData() {
+      const data = {
+        special1_star3: this.special1_star3,
+        special1_star4: this.special1_star4,
+        special1_star5: this.special1_star5,
+        special2_star3: this.special2_star3,
+        special2_star4: this.special2_star4,
+        special2_star5: this.special2_star5,
+        currentPoints: this.currentPoints,
+        targetPoints: this.targetPoints,
+        score123: this.score123,
+        score4: this.score4,
+        bp123: this.bp123,
+        bp4: this.bp4,
+        fever: this.fever
+      };
+      localStorage.setItem('enstM_data', JSON.stringify(data));
+    },
+    loadData() {
+      const data = JSON.parse(localStorage.getItem('enstM_data'));
+      if (data) {
+        this.special1_star3 = data.special1_star3;
+        this.special1_star4 = data.special1_star4;
+        this.special1_star5 = data.special1_star5;
+        this.special2_star3 = data.special2_star3;
+        this.special2_star4 = data.special2_star4;
+        this.special2_star5 = data.special2_star5;
+        this.currentPoints = data.currentPoints;
+        this.targetPoints = data.targetPoints;
+        this.score123 = data.score123;
+        this.score4 = data.score4;
+        this.bp123 = data.bp123;
+        this.bp4 = data.bp4;
+        this.fever = data.fever;
+      }
+    },
     calculate() {
       // 特効倍率の算出ロジック
       let totalMultiplier = (
