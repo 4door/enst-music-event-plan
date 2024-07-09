@@ -1,4 +1,4 @@
-# enstm-skills-checker
+# enst-music-event-plan
 
 あんさんぶるスターズMusicのツアーイベント走る計画を立てるためのアプリ<br/>
 
