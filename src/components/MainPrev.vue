@@ -1,93 +1,18 @@
 <template>
   <div class="container">
-    <!-- 入力フォーム -->
     <div class="form-container">
       <h2>enstMツアー計算ツール</h2>
-      <div class="form-group">
-        <label>特効①の☆3 枚数: 
-          <select v-model="special1_star3" @change="saveData">
-            <option v-for="n in 6" :key="n" :value="n-1">{{ n-1 }}</option>
+      <div class="form-group" v-for="(label, key) in labels" :key="key">
+        <label>{{ label }}: 
+          <select v-model="formData[key]" @change="saveData" v-if="key.includes('star') || key === 'bp123' || key === 'bp4'">
+            <option v-for="n in options[key]" :key="n" :value="n">{{ n }}</option>
           </select>
+          <input type="number" v-model="formData[key]" @change="saveData" v-else />
         </label>
       </div>
-
-      <div class="form-group">
-        <label>特効①の☆4 枚数: 
-          <select v-model="special1_star4" @change="saveData">
-            <option v-for="n in 6" :key="n" :value="n-1">{{ n-1 }}</option>
-          </select>
-        </label>
-      </div>
-
-      <div class="form-group">
-        <label>特効①の☆5 枚数: 
-          <select v-model="special1_star5" @change="saveData">
-            <option v-for="n in 6" :key="n" :value="n-1">{{ n-1 }}</option>
-          </select>
-        </label>
-      </div>
-
-      <div class="form-group">
-        <label>特効②の☆3 枚数: 
-          <select v-model="special2_star3" @change="saveData">
-            <option v-for="n in 6" :key="n" :value="n-1">{{ n-1 }}</option>
-          </select>
-        </label>
-      </div>
-
-      <div class="form-group">
-        <label>特効②の☆4 枚数: 
-          <select v-model="special2_star4" @change="saveData">
-            <option v-for="n in 6" :key="n" :value="n-1">{{ n-1 }}</option>
-          </select>
-        </label>
-      </div>
-
-      <div class="form-group">
-        <label>特効②の☆5 枚数: 
-          <select v-model="special2_star5" @change="saveData">
-            <option v-for="n in 6" :key="n" :value="n-1">{{ n-1 }}</option>
-          </select>
-        </label>
-      </div>
-
-      <div class="form-group">
-        <label>現在のpt数(万pt): <input type="number" v-model="currentPoints" @change="saveData"></label>
-      </div>
-
-      <div class="form-group">
-        <label>目標pt(万pt): <input type="number" v-model="targetPoints" @change="saveData"></label>
-      </div>
-
-      <div class="form-group">
-        <label>１～３曲目ライブSCORE(万pt): <input type="number" v-model="score123" @change="saveData"></label>
-      </div>
-
-      <div class="form-group">
-        <label>４曲目ライブSCORE(万pt): <input type="number" v-model="score4" @change="saveData"></label>
-      </div>
-
-      <div class="form-group">
-        <label>１～３曲目ライブBP: <input type="number" v-model="bp123" @change="saveData"></label>
-      </div>
-
-      <div class="form-group">
-        <label>４曲目ライブBP: <input type="number" v-model="bp4" @change="saveData"></label>
-      </div>
-
-      <div class="form-group">
-        <label>FEVER: <input type="number" v-model="fever" @change="saveData"></label>
-      </div>
-
-      <div class="form-group">
-        <label>1公演あたりの時間（分）<input type="number" v-model="time" @change="saveData"></label>
-        ※空欄の場合12分で計算します
-      </div>
-
       <button @click="calculate">計算を実行</button>
     </div>
     <h2>計算結果</h2>
-    <!-- 結果表示 -->
     <div v-if="result" class="result-container">
       <h3>特効倍率</h3>
       <p>{{ result.totalMultiplier }} ％</p>
@@ -95,7 +20,6 @@
       <p>必要公演回数: {{ result.requiredPlays }} 回</p>
       <p>イベント必要ダイヤ数: {{ result.requiredDiamonds }} 個</p>
       <p>必要プレイ時間数: {{ result.requiredTime }} 時間{{ result.requiredTimeMinutes }} 分</p>
-
       <h3>獲得ptから算出した残数</h3>
       <p>残り公演回数: {{ result.restPlays }} 回</p>
       <p>残り必要ダイヤ数: {{ result.restRequiredDiamonds }} 個</p>
@@ -104,10 +28,42 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
+<script lang="ts">
+import { defineComponent, ref, onMounted } from 'vue';
+
+interface FormData {
+  special1_star3: number;
+  special1_star4: number;
+  special1_star5: number;
+  special2_star3: number;
+  special2_star4: number;
+  special2_star5: number;
+  currentPoints: number;
+  targetPoints: number;
+  score123: number;
+  score4: number;
+  bp123: number;
+  bp4: number;
+  fever: number;
+  time: number;
+}
+
+interface Result {
+  requiredPlays: number;
+  requiredDiamonds: number;
+  requiredTime: number;
+  requiredTimeMinutes: number;
+  totalMultiplier: number;
+  restPlays: number;
+  restRequiredDiamonds: number;
+  restRequiredTime: number;
+  restRequiredTimeMinutes: number;
+}
+
+export default defineComponent({
+  name: 'EnstMTourCalculator',
+  setup() {
+    const formData = ref<FormData>({
       special1_star3: 0,
       special1_star4: 0,
       special1_star5: 0,
@@ -121,129 +77,132 @@ export default {
       bp123: 3,
       bp4: 10,
       fever: 0,
-      time: 12,
-      result: null
+      time: 12
+    });
+
+    const result = ref<Result | null>(null);
+
+    const labels: Record<keyof FormData, string> = {
+      special1_star3: '特効①の☆3 枚数',
+      special1_star4: '特効①の☆4 枚数',
+      special1_star5: '特効①の☆5 枚数',
+      special2_star3: '特効②の☆3 枚数',
+      special2_star4: '特効②の☆4 枚数',
+      special2_star5: '特効②の☆5 枚数',
+      currentPoints: '現在のpt数(万pt)',
+      targetPoints: '目標pt(万pt)',
+      score123: '１～３曲目ライブSCORE(万pt)',
+      score4: '４曲目ライブSCORE(万pt)',
+      bp123: '１～３曲目ライブBP',
+      bp4: '４曲目ライブBP',
+      fever: 'FEVER',
+      time: '1公演あたりの時間（分）'
     };
-  },mounted() {
-    this.loadData();
-  },
-  methods: {
-    saveData() {
-      const data = {
-        special1_star3: this.special1_star3,
-        special1_star4: this.special1_star4,
-        special1_star5: this.special1_star5,
-        special2_star3: this.special2_star3,
-        special2_star4: this.special2_star4,
-        special2_star5: this.special2_star5,
-        currentPoints: this.currentPoints,
-        targetPoints: this.targetPoints,
-        score123: this.score123,
-        score4: this.score4,
-        bp123: this.bp123,
-        bp4: this.bp4,
-        fever: this.fever,
-        time: this.time
-      };
-      localStorage.setItem('enstM_data', JSON.stringify(data));
-    },
-    loadData() {
-      const data = JSON.parse(localStorage.getItem('enstM_data'));
+
+    const options: Record<keyof FormData, number[]> = {
+      special1_star3: [0, 1, 2, 3, 4, 5],
+      special1_star4: [0, 1, 2, 3, 4, 5],
+      special1_star5: [0, 1, 2, 3, 4, 5],
+      special2_star3: [0, 1, 2, 3, 4, 5],
+      special2_star4: [0, 1, 2, 3, 4, 5],
+      special2_star5: [0, 1, 2, 3, 4, 5],
+      bp123: [3, 6, 10],
+      bp4: [3, 6, 10],
+      currentPoints: [],
+      targetPoints: [],
+      score123: [],
+      score4: [],
+      fever: [],
+      time: []
+    };
+
+    const saveData = () => {
+      localStorage.setItem('enstM_data', JSON.stringify(formData.value));
+    };
+
+    const loadData = () => {
+      const data = localStorage.getItem('enstM_data');
       if (data) {
-        this.special1_star3 = data.special1_star3;
-        this.special1_star4 = data.special1_star4;
-        this.special1_star5 = data.special1_star5;
-        this.special2_star3 = data.special2_star3;
-        this.special2_star4 = data.special2_star4;
-        this.special2_star5 = data.special2_star5;
-        this.currentPoints = data.currentPoints;
-        this.targetPoints = data.targetPoints;
-        this.score123 = data.score123;
-        this.score4 = data.score4;
-        this.bp123 = data.bp123;
-        this.bp4 = data.bp4;
-        this.fever = data.fever;
-        this.time = data.time;
+        Object.assign(formData.value, JSON.parse(data));
       }
-    },
-    calculate() {
-      // 特効倍率の算出ロジック
-      let totalMultiplier = (
-        this.special1_star3 +
-        [0, 5, 15, 25, 35, 50][this.special1_star4] +
-        [0, 20, 50, 75, 100, 150][this.special1_star5] +
-        this.special2_star3 +
-        [0, 5, 15, 25, 35, 50][this.special2_star4] +
-        [0, 20, 50, 75, 100, 150][this.special2_star5]
+    };
+
+    const calculate = () => {
+      const { special1_star3, special1_star4, special1_star5, special2_star3, special2_star4, special2_star5, currentPoints, targetPoints, score123, score4, bp123, bp4, fever, time } = formData.value;
+
+      const totalMultiplier = (
+        special1_star3 +
+        [0, 5, 15, 25, 35, 50][special1_star4] +
+        [0, 20, 50, 75, 100, 150][special1_star5] +
+        special2_star3 +
+        [0, 5, 15, 25, 35, 50][special2_star4] +
+        [0, 20, 50, 75, 100, 150][special2_star5]
       ) / 100 + 1;
 
-      // １～３曲目の1BP当たりのpt
-      let ptPerBP123 = (
-        2500 + (this.score123 * 10000 / 5000)
+      const ptPerBP123 = (
+        2500 + (score123 * 10000 / 5000)
       ) * totalMultiplier;
 
-      // ４曲目の1BP当たりのpt
-      let ptPerBP4 = (
-        2250 + (this.score4 * 10000 / 5000)
-      ) * totalMultiplier * (1 + this.fever / 100);
+      const ptPerBP4 = (
+        2250 + (score4 * 10000 / 5000)
+      ) * totalMultiplier * (1 + fever / 100);
 
-      // 1公演当たりのpt
-      let ptPerPlay = (
-        ptPerBP123 * 3 * this.bp123 +
-        ptPerBP4 * this.bp4
+      const ptPerPlay = (
+        ptPerBP123 * 3 * bp123 +
+        ptPerBP4 * bp4
       );
 
-      // 必要公演回数
-      let requiredPlays = Math.ceil(this.targetPoints * 10000 / ptPerPlay);
+      const requiredPlays = Math.ceil(targetPoints * 10000 / ptPerPlay);
 
-      // 必要BP数
-      let requiredBP = requiredPlays * (this.bp123 * 3 + this.bp4);
+      const requiredBP = requiredPlays * (bp123 * 3 + bp4);
 
-      // イベント必要ダイヤ数
-      let requiredDiamonds = requiredBP * 2;
+      const requiredDiamonds = requiredBP * 2;
 
-      // 必要プレイ時間数（分）
-      if(this.time == null || this.time == 0){
-        this.time = 12;
+      if (!time) {
+        formData.value.time = 12;
       }
-      let requiredTimeMinutes = requiredPlays * this.time;
+      const requiredTimeMinutes = requiredPlays * time;
 
-      // 現在の獲得ポイント数を考慮し、残りの必要時間等を求める
-      // 残りpt
-      let restPoints = this.targetPoints - this.currentPoints;
+      const restPoints = targetPoints - currentPoints;
       
-      // 残り公演回数
-      let restPlays = Math.ceil(restPoints * 10000 / ptPerPlay);
+      const restPlays = Math.ceil(restPoints * 10000 / ptPerPlay);
 
-      // 残り必要BP数
-      let restRequiredBP =restPlays * (this.bp123 * 3 + this.bp4);
+      const restRequiredBP = restPlays * (bp123 * 3 + bp4);
 
-      // 残り必要ダイヤ数
-      let restRequiredDiamonds = restRequiredBP * 2;
+      const restRequiredDiamonds = restRequiredBP * 2;
 
-      // 残り必要プレイ時間数（分）
-      let restRequiredTimeMinutes = restPlays * this.time;
+      const restRequiredTimeMinutes = restPlays * time;
 
-      // 結果を保存
-      this.result = {
-        requiredPlays: requiredPlays,
-        requiredDiamonds: requiredDiamonds,
+      result.value = {
+        requiredPlays,
+        requiredDiamonds,
         requiredTime: Math.trunc(requiredTimeMinutes / 60),
-        requiredTimeMinutes: requiredTimeMinutes -  Math.trunc(requiredTimeMinutes / 60)*60,
+        requiredTimeMinutes: requiredTimeMinutes % 60,
         totalMultiplier: (totalMultiplier - 1) * 100,
-        restPlays: restPlays,
-        restRequiredDiamonds: restRequiredDiamonds,
+        restPlays,
+        restRequiredDiamonds,
         restRequiredTime: Math.trunc(restRequiredTimeMinutes / 60),
-        restRequiredTimeMinutes: restRequiredTimeMinutes -  Math.trunc(restRequiredTimeMinutes / 60)*60
+        restRequiredTimeMinutes: restRequiredTimeMinutes % 60
       };
 
       console.log('計算の実行ありがとう♪');
-    }
+    };
+
+    onMounted(loadData);
+
+    return {
+      formData,
+      result,
+      labels,
+      options,
+      saveData,
+      calculate
+    };
   }
-};
+});
 </script>
 
-<style>
+<style scoped>
 body {
   font-family: Arial, sans-serif;
   margin: 0;
