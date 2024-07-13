@@ -110,7 +110,7 @@ export default defineComponent({
       const ptPerBPNormal = 2000 + normalLiveScoreBonus;
 
       // 通常曲獲得pt/1BP
-      const normalLivePointsPerBP = ptPerBPNormal;
+      const normalLivePointsPerBP = ptPerBPNormal * totalMultiplier;
 
       // 100PASS獲得pt
       const passPoints = 10000;
