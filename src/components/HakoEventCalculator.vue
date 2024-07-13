@@ -165,7 +165,7 @@ export default defineComponent({
 
       // 通常ライブプレイ時間（必要ライブ回数 * 通常楽曲のプレイ時間 / 60）時間と分で表示
       let requiredTimeHours = Math.floor((requiredPlays * normalLivePlayTime) / 60);
-      let requiredTimeMinutes = (requiredPlays * normalLivePlayTime) % 60;
+      let requiredTimeMinutes = Math.trunc((requiredPlays * normalLivePlayTime) % 60);
 
       // 貯まるPASS（ライブBP * 必要ライブ回数 * 10）
       let accumulatedPasses = liveBP * requiredPlays * 10;
