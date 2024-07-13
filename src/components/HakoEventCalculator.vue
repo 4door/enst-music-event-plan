@@ -32,7 +32,7 @@
       <p>残り必要ダイヤ数: {{ result.restRequiredDiamonds }} 個</p>
       <p>残り通常プレイ時間数: {{ result.restRequiredTime }} 時間{{ result.restRequiredTimeMinutes }} 分</p>
       <p>※獲得ポイントが0であっても計算方法によりトータル数と若干の差異が出ます</p>
-      <p>※プレイ時間・回数にイベント・ライブは含まれていません</p>
+      <p>※プレイ時間・回数にイベントライブは含まれていません</p>
     </div>
   </div>
 </template>
