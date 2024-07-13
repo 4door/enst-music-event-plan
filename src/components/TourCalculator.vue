@@ -165,7 +165,7 @@ export default defineComponent({
 
       const restRequiredDiamonds = restRequiredBP * 2;
 
-      const restRequiredTimeMinutes = restPlays * (time || 12);
+      const restRequiredTimeMinutes = Math.trunc(restPlays * (time || 12));
 
       result.value = {
         requiredPlays,

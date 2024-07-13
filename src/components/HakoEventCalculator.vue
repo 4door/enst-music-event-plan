@@ -183,7 +183,7 @@ export default defineComponent({
       const restRequiredDiamonds = restRequiredBP * 2;
 
       // 残りの必要時間（分）
-      const restRequiredTimeMinutes = restPlays * normalLivePlayTime;
+      const restRequiredTimeMinutes = Math.trunc(restPlays * normalLivePlayTime);
 
       // 結果を更新
       result.value = {
