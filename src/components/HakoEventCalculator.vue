@@ -4,6 +4,12 @@
     <div>
       <div class="form-group" v-for="(label, key) in labels" :key="key">
         <label>{{ label }}:
+          <template v-if="key === 'targetPoints'">
+            <span
+              v-tippy="{ content: '報酬☆5<br>1枚目　350万<br>2枚目　750万<br>3枚目　1100万<br>4枚目　1500万<br>5枚目　2200万', allowHTML: true }"
+              class="tooltip-icon"
+            ><font-awesome-icon icon="fa-solid fa-circle-info" /></span>
+          </template>
           <select v-model="formData[key]" @change="saveData" v-if="key.includes('star') || key === 'liveBP'">
             <option v-for="n in options[key]" :key="n" :value="n">{{ n }}</option>
           </select>
@@ -16,15 +22,17 @@
     <div v-if="result" class="result-container">
       <h2>計算結果</h2>
       <h3>トータル数</h3>
-      <p>必要ライブ回数: {{ result.requiredPlays }} 回</p>
+      <p>必要通常ライブ回数: {{ result.requiredPlays }} 回</p>
       <p>必要ダイヤ数: {{ result.requiredDiamonds }} 個</p>
       <p>通常ライブプレイ時間: {{ result.requiredTimeHours }} 時間 {{ result.requiredTimeMinutes }} 分</p>
       <p>貯まるPASS: {{ result.accumulatedPasses }} 個</p>
+      <p>リボン獲得数:{{ result.ribbons }} 個（ライブ数のみで算出） </p>
       <h3>獲得ptから算出した残数</h3>
-      <p>残りライブ回数: {{ result.restPlays }} 回</p>
+      <p>残り通常ライブ回数: {{ result.restPlays }} 回</p>
       <p>残り必要ダイヤ数: {{ result.restRequiredDiamonds }} 個</p>
-      <p>残りプレイ時間数: {{ result.restRequiredTime }} 時間{{ result.restRequiredTimeMinutes }} 分</p>
+      <p>残り通常プレイ時間数: {{ result.restRequiredTime }} 時間{{ result.restRequiredTimeMinutes }} 分</p>
       <p>※獲得ポイントが0であっても計算方法によりトータル数と若干の差異が出ます</p>
+      <p>※プレイ時間・回数にイベント・ライブは含まれていません</p>
     </div>
   </div>
 </template>
@@ -57,6 +65,7 @@ interface Result {
   restRequiredDiamonds: number;
   restRequiredTime: number;
   restRequiredTimeMinutes: number;
+  ribbons: number;
 }
 
 export default defineComponent({
@@ -70,9 +79,9 @@ export default defineComponent({
       special2_star4: 0,
       special2_star5: 0,
       currentPoints: 0,
-      targetPoints: 0,
-      normalLiveScore: 0,
-      eventLiveScore: 0,
+      targetPoints: 350,
+      normalLiveScore: 350,
+      eventLiveScore: 350,
       normalLivePlayTime: 3,
       liveBP: 1
     });
@@ -186,6 +195,9 @@ export default defineComponent({
       // 残りの必要時間（分）
       const restRequiredTimeMinutes = Math.floor(restPlays * normalLivePlayTime);
 
+      // リボン獲得数
+      const ribbons = liveBP * requiredPlays * 3 + accumulatedPasses/10
+
       // 結果を更新
       result.value = {
         requiredPlays,
@@ -196,7 +208,8 @@ export default defineComponent({
         restPlays,
         restRequiredDiamonds,
         restRequiredTime: Math.floor(restRequiredTimeMinutes / 60),
-        restRequiredTimeMinutes: restRequiredTimeMinutes % 60
+        restRequiredTimeMinutes: restRequiredTimeMinutes % 60,
+        ribbons
       };
     };
 
@@ -258,5 +271,9 @@ button:hover {
 .result-container p {
   margin: 10px 0;
   font-size: 15px;
+}
+.tooltip-icon {
+  cursor: pointer;
+  margin-left: 5px;
 }
 </style>
