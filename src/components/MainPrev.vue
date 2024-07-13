@@ -39,7 +39,7 @@ export default defineComponent({
       <h2>enstMイベント計算ツール</h2>
       <div class="form-group">
         <label>イベントタイプ:
-          <select v-model="eventType">
+          <select v-model="eventType" @change="saveData">
             <option value="tour">ツアー用</option>
             <option value="hako">箱イベ用</option>
           </select>
