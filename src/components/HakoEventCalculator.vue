@@ -159,14 +159,14 @@ export default defineComponent({
       let requiredBP = (targetPoints * 10000) / totalPointsPerBP;
 
       // 必要ライブ回数（消費BP数 / ライブBP）
-      let requiredPlays = Math.trunc(requiredBP / liveBP);
+      let requiredPlays = Math.floor(requiredBP / liveBP);
 
       // 必要ダイヤ数（消費BP数 / 合計獲得pt/1BP * 2）小数点以下切り上げ
-      let requiredDiamonds = Math.trunc(requiredBP * 2);
+      let requiredDiamonds = Math.floor(requiredBP * 2);
 
       // 通常ライブプレイ時間（必要ライブ回数 * 通常楽曲のプレイ時間 / 60）時間と分で表示
       let requiredTimeHours = Math.floor((requiredPlays * normalLivePlayTime) / 60);
-      let requiredTimeMinutes = Math.trunc((requiredPlays * normalLivePlayTime) % 60);
+      let requiredTimeMinutes = Math.floor((requiredPlays * normalLivePlayTime) % 60);
 
       // 貯まるPASS（ライブBP * 必要ライブ回数 * 10）
       let accumulatedPasses = liveBP * requiredPlays * 10;
@@ -175,7 +175,7 @@ export default defineComponent({
       const restPoints = targetPoints - currentPoints;
 
       // 残りの必要ライブ回数
-      const restPlays = Math.ceil(restPoints * 10000 / (totalPointsPerBP* liveBP));
+      const restPlays = Math.floor(restPoints * 10000 / (totalPointsPerBP* liveBP));
 
       // 残りの必要BP数
       const restRequiredBP = restPlays * liveBP;
@@ -184,7 +184,7 @@ export default defineComponent({
       const restRequiredDiamonds = restRequiredBP * 2;
 
       // 残りの必要時間（分）
-      const restRequiredTimeMinutes = Math.trunc(restPlays * normalLivePlayTime);
+      const restRequiredTimeMinutes = Math.floor(restPlays * normalLivePlayTime);
 
       // 結果を更新
       result.value = {
