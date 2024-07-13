@@ -8,6 +8,7 @@ https://em-eventplan.netlify.app/
 ![image](https://github.com/4door/enst-music-event-plan/assets/76190491/73624bc0-1bd2-4c73-9f68-0df624a17919)
 
 ## 利用方法
+### ツアーイベント
 ①編成する特効の枚数を入力。<br/>
 例えば、実際の画面に入力されているものはサポートに星4完凸×2、ライブメンバーに星5無凸×2を入れてる場合（よくある編成だと思う）。
 
@@ -45,7 +46,6 @@ https://em-eventplan.netlify.app/
 手動切り替えのトグルを追加するかは未定。
 
 ## 今後の機能追加予定
-・箱イベ用計算ツール
 ・楽曲プレイ時間難易度検索
 
 ## Project Setup
