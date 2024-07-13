@@ -260,4 +260,8 @@ button:hover {
   margin: 10px 0;
   font-size: 15px;
 }
+.tooltip-icon {
+  cursor: pointer;
+  margin-left: 5px;
+}
 </style>
