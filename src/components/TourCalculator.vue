@@ -133,6 +133,7 @@ export default defineComponent({
     const calculate = () => {
       const { special1_star3, special1_star4, special1_star5, special2_star3, special2_star4, special2_star5, currentPoints, targetPoints, score123, score4, bp123, bp4, fever, time } = formData.value;
 
+      // 特効倍率
       const totalMultiplier = (
         special1_star3 +
         [0, 5, 15, 25, 35, 50][special1_star4] +
@@ -142,35 +143,48 @@ export default defineComponent({
         [0, 20, 50, 75, 100, 150][special2_star5]
       ) / 100 + 1;
 
+      // 前3曲の１曲あたりのpt
       const ptPerBP123 = (
         2500 + (score123 * 10000 / 5000)
       ) * totalMultiplier;
 
+      // 4曲目のpt
       const ptPerBP4 = (
         2250 + (score4 * 10000 / 5000)
       ) * totalMultiplier * (1 + fever / 100);
 
+      // 1公園あたりのpt
       const ptPerPlay = (
         ptPerBP123 * 3 * bp123 +
         ptPerBP4 * bp4
       );
 
+      // 必要ライブ回数
       const requiredPlays = Math.ceil(targetPoints * 10000 / ptPerPlay);
 
+      // 消費BP数
       const requiredBP = requiredPlays * (bp123 * 3 + bp4);
 
+      // 必要ダイヤ数
       const requiredDiamonds = requiredBP * 2;
 
+      // 所要時間
       const requiredTimeMinutes = requiredPlays * (time || 12);
 
+      // 獲得ptから残り時間等を計算
+      // 残りの必要pt
       const restPoints = targetPoints - currentPoints;
 
+      // 残りプレイ回数
       const restPlays = Math.ceil(restPoints * 10000 / ptPerPlay);
 
+      // 残り必要BP
       const restRequiredBP = restPlays * (bp123 * 3 + bp4);
 
+      // 残り必要ダイヤ
       const restRequiredDiamonds = restRequiredBP * 2;
 
+      // 残り必要時間
       const restRequiredTimeMinutes = Math.trunc(restPlays * (time || 12));
 
       result.value = {

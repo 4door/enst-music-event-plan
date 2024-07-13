@@ -132,7 +132,7 @@ export default defineComponent({
     const calculate = () => {
       const { special1_star3, special1_star4, special1_star5, special2_star3, special2_star4, special2_star5, currentPoints, targetPoints, normalLiveScore, eventLiveScore, normalLivePlayTime, liveBP } = formData.value;
 
-      // 特効倍率の計算ロジックを追加する必要があります
+      // 特効倍率
       const totalMultiplier = (
         special1_star3 +
         [0, 5, 15, 25, 35, 50][special1_star4] +
@@ -143,42 +143,42 @@ export default defineComponent({
       ) / 100 + 1;
 
       // 通常ライブのスコアボーナス
-      let normalLiveScoreBonus = (normalLiveScore * 10000) / 5000;
+      const normalLiveScoreBonus = (normalLiveScore * 10000) / 5000;
 
       // 通常ライブの1BP当たりのpt
-      let ptPerBPNormal = 2000 + normalLiveScoreBonus;
+      const ptPerBPNormal = 2000 + normalLiveScoreBonus;
 
       // 通常曲獲得pt/1BP
-      let normalLivePointsPerBP = ptPerBPNormal;
+      const normalLivePointsPerBP = ptPerBPNormal;
 
       // 100PASS獲得pt
-      let passPoints = 10000;
+      const passPoints = 10000;
 
       // イベントライブのスコアボーナス
-      let eventLiveScoreBonus = (eventLiveScore * 10000) / 5000;
+      const eventLiveScoreBonus = (eventLiveScore * 10000) / 5000;
 
       // イベ曲獲得pt/100PASS
-      let eventLivePointsPerPass =
+      const eventLivePointsPerPass =
         (passPoints + eventLiveScoreBonus) * totalMultiplier;
 
       // 合計獲得pt/1BP
-      let totalPointsPerBP = normalLivePointsPerBP + eventLivePointsPerPass / 10;
+      const totalPointsPerBP = normalLivePointsPerBP + eventLivePointsPerPass / 10;
 
       // 消費BP数
-      let requiredBP = (targetPoints * 10000) / totalPointsPerBP;
+      const requiredBP = (targetPoints * 10000) / totalPointsPerBP;
 
       // 必要ライブ回数（消費BP数 / ライブBP）
-      let requiredPlays = Math.floor(requiredBP / liveBP);
+      const requiredPlays = Math.floor(requiredBP / liveBP);
 
       // 必要ダイヤ数（消費BP数 / 合計獲得pt/1BP * 2）小数点以下切り上げ
-      let requiredDiamonds = Math.floor(requiredBP * 2);
+      const requiredDiamonds = Math.floor(requiredBP * 2);
 
       // 通常ライブプレイ時間（必要ライブ回数 * 通常楽曲のプレイ時間 / 60）時間と分で表示
-      let requiredTimeHours = Math.floor((requiredPlays * normalLivePlayTime) / 60);
-      let requiredTimeMinutes = Math.floor((requiredPlays * normalLivePlayTime) % 60);
+      const requiredTimeHours = Math.floor((requiredPlays * normalLivePlayTime) / 60);
+      const requiredTimeMinutes = Math.floor((requiredPlays * normalLivePlayTime) % 60);
 
       // 貯まるPASS（ライブBP * 必要ライブ回数 * 10）
-      let accumulatedPasses = liveBP * requiredPlays * 10;
+      const accumulatedPasses = liveBP * requiredPlays * 10;
 
       // 残りの必要ポイントを計算
       const restPoints = targetPoints - currentPoints;
