@@ -1,36 +1,3 @@
-<!-- TourCalculator.vue -->
-<template>
-  <div>
-    <div class="form-group" v-for="(label, key) in labels" :key="key">
-      <label>{{ label }}: 
-          <template v-if="key === 'targetPoints'">
-            <span
-              v-tippy="{ content: '報酬☆5<br>1枚目　300万 350万<br>2枚目　750万 600万<br>3枚目　950万 1100万<br>4枚目　1500万 1350万<br>5枚目　2100万 2200万', allowHTML: true }"
-              class="tooltip-icon"
-            ><font-awesome-icon icon="fa-solid fa-circle-info" /></span>
-          </template>
-        <select v-model="formData[key]" @change="saveData" v-if="key.includes('star') || key === 'bp123' || key === 'bp4'">
-          <option v-for="n in options[key]" :key="n" :value="n">{{ n }}</option>
-        </select>
-        <input type="number" v-model="formData[key]" @change="saveData" v-else />
-      </label>
-    </div>
-    <button @click="calculate">計算を実行</button>
-    <div v-if="result" class="result-container">
-      <h3>特効倍率</h3>
-      <p>{{ result.totalMultiplier }} ％</p>
-      <h3>トータル数</h3>
-      <p>必要公演回数: {{ result.requiredPlays }} 回</p>
-      <p>イベント必要ダイヤ数: {{ result.requiredDiamonds }} 個</p>
-      <p>必要プレイ時間数: {{ result.requiredTime }} 時間{{ result.requiredTimeMinutes }} 分</p>
-      <h3>獲得ptから算出した残数</h3>
-      <p>残り公演回数: {{ result.restPlays }} 回</p>
-      <p>残り必要ダイヤ数: {{ result.restRequiredDiamonds }} 個</p>
-      <p>残りプレイ時間数: {{ result.restRequiredTime }} 時間{{ result.restRequiredTimeMinutes }} 分</p>
-    </div>
-  </div>
-</template>
-
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
 
@@ -133,6 +100,7 @@ export default defineComponent({
     const calculate = () => {
       const { special1_star3, special1_star4, special1_star5, special2_star3, special2_star4, special2_star5, currentPoints, targetPoints, score123, score4, bp123, bp4, fever, time } = formData.value;
 
+      // 特効倍率
       const totalMultiplier = (
         special1_star3 +
         [0, 5, 15, 25, 35, 50][special1_star4] +
@@ -142,35 +110,48 @@ export default defineComponent({
         [0, 20, 50, 75, 100, 150][special2_star5]
       ) / 100 + 1;
 
+      // 前3曲の１曲あたりのpt
       const ptPerBP123 = (
         2500 + (score123 * 10000 / 5000)
       ) * totalMultiplier;
 
+      // 4曲目のpt
       const ptPerBP4 = (
         2250 + (score4 * 10000 / 5000)
       ) * totalMultiplier * (1 + fever / 100);
 
+      // 1公園あたりのpt
       const ptPerPlay = (
         ptPerBP123 * 3 * bp123 +
         ptPerBP4 * bp4
       );
 
+      // 必要ライブ回数
       const requiredPlays = Math.ceil(targetPoints * 10000 / ptPerPlay);
 
+      // 消費BP数
       const requiredBP = requiredPlays * (bp123 * 3 + bp4);
 
+      // 必要ダイヤ数
       const requiredDiamonds = requiredBP * 2;
 
+      // 所要時間
       const requiredTimeMinutes = requiredPlays * (time || 12);
 
+      // 獲得ptから残り時間等を計算
+      // 残りの必要pt
       const restPoints = targetPoints - currentPoints;
 
+      // 残りプレイ回数
       const restPlays = Math.ceil(restPoints * 10000 / ptPerPlay);
 
+      // 残り必要BP
       const restRequiredBP = restPlays * (bp123 * 3 + bp4);
 
+      // 残り必要ダイヤ
       const restRequiredDiamonds = restRequiredBP * 2;
 
+      // 残り必要時間
       const restRequiredTimeMinutes = Math.trunc(restPlays * (time || 12));
 
       result.value = {
@@ -201,6 +182,38 @@ export default defineComponent({
   }
 });
 </script>
+
+<template>
+  <div>
+    <div class="form-group" v-for="(label, key) in labels" :key="key">
+      <label>{{ label }}: 
+          <template v-if="key === 'targetPoints'">
+            <span
+              v-tippy="{ content: '報酬☆5<br>1枚目　300万 350万<br>2枚目　750万 600万<br>3枚目　950万 1100万<br>4枚目　1500万 1350万<br>5枚目　2100万 2200万', allowHTML: true }"
+              class="tooltip-icon"
+            ><font-awesome-icon icon="fa-solid fa-circle-info" /></span>
+          </template>
+        <select v-model="formData[key]" @change="saveData" v-if="key.includes('star') || key === 'bp123' || key === 'bp4'">
+          <option v-for="n in options[key]" :key="n" :value="n">{{ n }}</option>
+        </select>
+        <input type="number" v-model="formData[key]" @change="saveData" v-else />
+      </label>
+    </div>
+    <button @click="calculate">計算を実行</button>
+    <div v-if="result" class="result-container">
+      <h3>特効倍率</h3>
+      <p>{{ result.totalMultiplier }} ％</p>
+      <h3>トータル数</h3>
+      <p>必要公演回数: {{ result.requiredPlays }} 回</p>
+      <p>イベント必要ダイヤ数: {{ result.requiredDiamonds }} 個</p>
+      <p>必要プレイ時間数: {{ result.requiredTime }} 時間{{ result.requiredTimeMinutes }} 分</p>
+      <h3>獲得ptから算出した残数</h3>
+      <p>残り公演回数: {{ result.restPlays }} 回</p>
+      <p>残り必要ダイヤ数: {{ result.restRequiredDiamonds }} 個</p>
+      <p>残りプレイ時間数: {{ result.restRequiredTime }} 時間{{ result.restRequiredTimeMinutes }} 分</p>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .form-group {
@@ -246,5 +259,9 @@ button:hover {
 .result-container p {
   margin: 10px 0;
   font-size: 15px;
+}
+.tooltip-icon {
+  cursor: pointer;
+  margin-left: 5px;
 }
 </style>

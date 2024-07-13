@@ -1,21 +1,3 @@
-<template>
-  <div class="container">
-    <div class="form-container">
-      <h2>enstMイベント計算ツール</h2>
-      <div class="form-group">
-        <label>イベントタイプ:
-          <select v-model="eventType">
-            <option value="tour">ツアー用</option>
-            <option value="hako">箱イベ用</option>
-          </select>
-        </label>
-      </div>
-      <TourCalculator v-if="eventType === 'tour'" />
-      <HakoEventCalculator v-if="eventType === 'hako'" />
-    </div>
-  </div>
-</template>
-
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
 import TourCalculator from './TourCalculator.vue';
@@ -50,6 +32,25 @@ export default defineComponent({
   }
 });
 </script>
+
+<template>
+  <div class="container">
+    <div class="form-container">
+      <h2>enstMイベント計算ツール</h2>
+      <div class="form-group">
+        <label>イベントタイプ:
+          <select v-model="eventType" @change="saveData">
+            <option value="tour">ツアー用</option>
+            <option value="hako">箱イベ用</option>
+          </select>
+        </label>
+      </div>
+      <TourCalculator v-if="eventType === 'tour'" />
+      <HakoEventCalculator v-if="eventType === 'hako'" />
+    </div>
+  </div>
+</template>
+
 
 <style scoped>
 .container {
