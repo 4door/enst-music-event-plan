@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- 入力フォーム -->
     <div>
       <div class="form-group" v-for="(label, key) in labels" :key="key">
         <label>{{ label }}:
@@ -18,7 +17,6 @@
       </div>
       <button @click="calculate">計算を実行</button>
     </div>
-    <!-- 結果表示 -->
     <div v-if="result" class="result-container">
       <h2>計算結果</h2>
       <h3>トータル数</h3>

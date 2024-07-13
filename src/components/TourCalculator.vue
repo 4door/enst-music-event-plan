@@ -1,4 +1,3 @@
-<!-- TourCalculator.vue -->
 <template>
   <div>
     <div class="form-group" v-for="(label, key) in labels" :key="key">
