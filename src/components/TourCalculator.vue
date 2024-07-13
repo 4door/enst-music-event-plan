@@ -3,6 +3,12 @@
   <div>
     <div class="form-group" v-for="(label, key) in labels" :key="key">
       <label>{{ label }}: 
+          <template v-if="key === 'targetPoints'">
+            <span
+              v-tippy="{ content: '報酬☆5<br>1枚目　300万 350万<br>2枚目　750万 600万<br>3枚目　950万 1100万<br>4枚目　1500万 1350万<br>5枚目　2100万 2200万', allowHTML: true }"
+              class="tooltip-icon"
+            ><font-awesome-icon icon="fa-solid fa-circle-info" /></span>
+          </template>
         <select v-model="formData[key]" @change="saveData" v-if="key.includes('star') || key === 'bp123' || key === 'bp4'">
           <option v-for="n in options[key]" :key="n" :value="n">{{ n }}</option>
         </select>
@@ -68,12 +74,12 @@ export default defineComponent({
       special2_star4: 0,
       special2_star5: 0,
       currentPoints: 0,
-      targetPoints: 0,
-      score123: 0,
-      score4: 0,
+      targetPoints: 350,
+      score123: 350,
+      score4: 380,
       bp123: 3,
       bp4: 10,
-      fever: 0,
+      fever: 100,
       time: 12
     });
 
