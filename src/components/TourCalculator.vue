@@ -1,35 +1,3 @@
-<template>
-  <div>
-    <div class="form-group" v-for="(label, key) in labels" :key="key">
-      <label>{{ label }}: 
-          <template v-if="key === 'targetPoints'">
-            <span
-              v-tippy="{ content: '報酬☆5<br>1枚目　300万 350万<br>2枚目　750万 600万<br>3枚目　950万 1100万<br>4枚目　1500万 1350万<br>5枚目　2100万 2200万', allowHTML: true }"
-              class="tooltip-icon"
-            ><font-awesome-icon icon="fa-solid fa-circle-info" /></span>
-          </template>
-        <select v-model="formData[key]" @change="saveData" v-if="key.includes('star') || key === 'bp123' || key === 'bp4'">
-          <option v-for="n in options[key]" :key="n" :value="n">{{ n }}</option>
-        </select>
-        <input type="number" v-model="formData[key]" @change="saveData" v-else />
-      </label>
-    </div>
-    <button @click="calculate">計算を実行</button>
-    <div v-if="result" class="result-container">
-      <h3>特効倍率</h3>
-      <p>{{ result.totalMultiplier }} ％</p>
-      <h3>トータル数</h3>
-      <p>必要公演回数: {{ result.requiredPlays }} 回</p>
-      <p>イベント必要ダイヤ数: {{ result.requiredDiamonds }} 個</p>
-      <p>必要プレイ時間数: {{ result.requiredTime }} 時間{{ result.requiredTimeMinutes }} 分</p>
-      <h3>獲得ptから算出した残数</h3>
-      <p>残り公演回数: {{ result.restPlays }} 回</p>
-      <p>残り必要ダイヤ数: {{ result.restRequiredDiamonds }} 個</p>
-      <p>残りプレイ時間数: {{ result.restRequiredTime }} 時間{{ result.restRequiredTimeMinutes }} 分</p>
-    </div>
-  </div>
-</template>
-
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
 
@@ -214,6 +182,38 @@ export default defineComponent({
   }
 });
 </script>
+
+<template>
+  <div>
+    <div class="form-group" v-for="(label, key) in labels" :key="key">
+      <label>{{ label }}: 
+          <template v-if="key === 'targetPoints'">
+            <span
+              v-tippy="{ content: '報酬☆5<br>1枚目　300万 350万<br>2枚目　750万 600万<br>3枚目　950万 1100万<br>4枚目　1500万 1350万<br>5枚目　2100万 2200万', allowHTML: true }"
+              class="tooltip-icon"
+            ><font-awesome-icon icon="fa-solid fa-circle-info" /></span>
+          </template>
+        <select v-model="formData[key]" @change="saveData" v-if="key.includes('star') || key === 'bp123' || key === 'bp4'">
+          <option v-for="n in options[key]" :key="n" :value="n">{{ n }}</option>
+        </select>
+        <input type="number" v-model="formData[key]" @change="saveData" v-else />
+      </label>
+    </div>
+    <button @click="calculate">計算を実行</button>
+    <div v-if="result" class="result-container">
+      <h3>特効倍率</h3>
+      <p>{{ result.totalMultiplier }} ％</p>
+      <h3>トータル数</h3>
+      <p>必要公演回数: {{ result.requiredPlays }} 回</p>
+      <p>イベント必要ダイヤ数: {{ result.requiredDiamonds }} 個</p>
+      <p>必要プレイ時間数: {{ result.requiredTime }} 時間{{ result.requiredTimeMinutes }} 分</p>
+      <h3>獲得ptから算出した残数</h3>
+      <p>残り公演回数: {{ result.restPlays }} 回</p>
+      <p>残り必要ダイヤ数: {{ result.restRequiredDiamonds }} 個</p>
+      <p>残りプレイ時間数: {{ result.restRequiredTime }} 時間{{ result.restRequiredTimeMinutes }} 分</p>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .form-group {
